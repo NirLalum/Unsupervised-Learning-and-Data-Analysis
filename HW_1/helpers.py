@@ -24,6 +24,25 @@ def calc_plot_CI(alfa, n, plot=False, ax=None):
     return F_n, F_ci_down, F_ci_up, x_est
 
 
+# compute the emperical correlation and std of features
+def corr_bootstrap(x:np.ndarray, k, m):
+    # first calculate emperical correlation
+    emp_corr = np.corrcoef(x, rowvar=False)[0,1] # the diagonal is the variance and the values outside the diagonal are the correlation
+    
+    # calculate the std of the emperical correlation using bootstrap
+    corr_list = []
+    for _ in range(m):
+        # sample k with replacement
+        rows = np.random.choice(x.shape[0], size=k, replace=True)
+        xk = x[rows, :]
+
+        # calculate correlation of the sample
+        corr_list.append(np.corrcoef(xk, rowvar=False)[0,1])
+    
+    return emp_corr, np.std(corr_list), corr_list
+
+
+
     
 
 
